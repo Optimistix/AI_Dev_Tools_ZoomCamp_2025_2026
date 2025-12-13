@@ -1,0 +1,26 @@
+{
+  "name": "coding-interview-platform",
+  "version": "1.0.0",
+  "description": "Online coding interview platform with real-time collaboration",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd backend && npm start",
+    "client": "cd frontend && npm start",
+    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install",
+    "test": "concurrently \"npm run test:backend\" \"npm run test:frontend\"",
+    "test:backend": "cd backend && npm test",
+    "test:frontend": "cd frontend && npm test -- --watchAll=false"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "keywords": [
+    "interview",
+    "coding",
+    "collaboration",
+    "websocket",
+    "react"
+  ],
+  "author": "",
+  "license": "MIT"
+}
