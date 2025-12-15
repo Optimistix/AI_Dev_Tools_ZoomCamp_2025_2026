@@ -31,24 +31,69 @@ A real-time collaborative coding interview platform with syntax highlighting, mu
 
 ```
 coding-interview-platform/
-├── backend/
-│   ├── server.js           # WebSocket server & REST API
-│   └── package.json
-└── frontend/
+│
+├── 📄 Configuration Files
+│   ├── package.json              # Root npm scripts (dev, install:all, test)
+│   ├── docker-compose.yml        # Docker Compose orchestration
+│   ├── Dockerfile                # Multi-stage Docker build
+│   ├── docker-server.js          # Production server (serves both API + frontend)
+│   ├── render.yaml               # Render.com deployment config
+│   ├── .dockerignore             # Docker build exclusions
+│   ├── .gitignore                # Git exclusions
+│   └── setup.sh                  # Automated setup script
+│
+├── 📚 Documentation
+│   ├── README.md                 # This file - getting started guide
+│   ├── ARCHITECTURE.md           # System architecture & design patterns
+│   ├── TESTING.md                # Testing guide & best practices
+│   ├── DOCKER.md                 # Docker deployment guide
+│   ├── DEPLOYMENT.md             # Cloud deployment (Render, Railway, Fly.io)
+│   ├── PYTHON_EXECUTION.md       # Pyodide/Python execution guide
+│   └── DIRECTORY_STRUCTURE.md    # Detailed file structure explanation
+│
+├── 🔧 Backend (/backend)
+│   ├── server.js                 # Express + WebSocket server
+│   ├── server.test.js            # Mocha integration tests (12 tests)
+│   ├── package.json              # Backend dependencies
+│   └── .env.example              # Environment variables template
+│
+└── 🎨 Frontend (/frontend)
+    ├── package.json              # Frontend dependencies
+    │
     ├── public/
-    │   └── index.html
-    ├── src/
-    │   ├── App.jsx         # Main React application
-    │   ├── index.js        # React entry point
-    │   └── index.css       # Global styles
-    └── package.json
+    │   └── index.html            # HTML template (includes Pyodide CDN)
+    │
+    └── src/
+        ├── App.jsx               # Main React app with collaborative editor
+        ├── App.test.js           # React Testing Library tests (16 tests)
+        ├── index.js              # React entry point
+        ├── index.css             # Global styles
+        └── setupTests.js         # Jest test configuration
 ```
+
+**Total:** 26 files | ~3,400 lines of code | 28 integration tests
+
+**Key Features:**
+- ✅ Real-time WebSocket collaboration
+- ✅ JavaScript + Python execution (Pyodide WASM)
+- ✅ Syntax highlighting (Prism.js)
+- ✅ Docker containerization
+- ✅ Comprehensive testing
+- ✅ Cloud deployment ready
+
+See [DIRECTORY_STRUCTURE.md](DIRECTORY_STRUCTURE.md) for detailed file explanations.
 
 ## Installation & Setup
 
 ### Prerequisites
 - Node.js (v14 or higher)
 - npm or yarn
+
+**Important Notes:**
+- 📦 The `node_modules/` folders are **NOT** included in the repository
+- They will be automatically created when you run `npm install` or `npm run install:all`
+- Total size after installation: ~250-500 MB (this is normal!)
+- See [DIRECTORY_STRUCTURE.md](DIRECTORY_STRUCTURE.md) for details on dependencies
 
 ### Quick Start (Recommended)
 
@@ -404,15 +449,52 @@ Get session details
 
 ⚠️ **Important for Production:**
 
-1. **Code Execution**: Current implementation uses `eval()` which is unsafe for production. Implement server-side sandboxed execution.
+### Current Security Status
 
-2. **Session Management**: Add authentication and session timeouts.
+**JavaScript Execution:**
+- ⚠️ Uses `eval()` - safe for client-side demos but not recommended for production
+- ✅ Runs in user's browser sandbox
+- ✅ Cannot access server or other users
 
-3. **Rate Limiting**: Implement rate limiting on WebSocket messages and API endpoints.
+**Python Execution:**
+- ✅ **Fully sandboxed** via Pyodide WebAssembly
+- ✅ No file system access
+- ✅ No network access
+- ✅ No system calls
+- ✅ **Production-ready** for interview use cases
 
-4. **Input Validation**: Validate all incoming messages and sanitize code.
+### Recommendations for Production
 
-5. **HTTPS/WSS**: Use secure connections in production.
+1. **JavaScript Execution**: 
+   - Consider server-side sandboxed execution (Docker containers, VM2, isolated-vm)
+   - Or keep client-side with clear user warnings
+
+2. **Session Management**: 
+   - Add authentication (JWT tokens, OAuth)
+   - Implement session timeouts
+   - Add password protection for private sessions
+
+3. **Rate Limiting**: 
+   - Implement rate limiting on WebSocket messages
+   - Add API endpoint throttling
+   - Prevent abuse of code execution
+
+4. **Input Validation**: 
+   - Validate all incoming messages
+   - Sanitize user inputs
+   - Check code length limits
+
+5. **HTTPS/WSS**: 
+   - **Required** for production deployment
+   - Use SSL certificates (free with Render, Railway, etc.)
+   - Enforce secure connections only
+
+6. **Monitoring**:
+   - Log all sessions and activities
+   - Monitor for suspicious patterns
+   - Set up alerts for errors
+
+**Note:** Python execution via Pyodide is already production-safe due to WebAssembly's security model.
 
 ## Customization
 
@@ -468,6 +550,81 @@ Change ports in:
 - [ ] Code templates and snippets
 - [ ] User authentication
 - [ ] Interview feedback system
+
+## Quick Reference
+
+### 📖 Documentation Guide
+
+| Document | Purpose |
+|----------|---------|
+| **README.md** (this file) | Getting started, installation, features |
+| **[ARCHITECTURE.md](ARCHITECTURE.md)** | System design, WebSocket protocol, data flow |
+| **[TESTING.md](TESTING.md)** | Running tests, writing tests, CI/CD |
+| **[DOCKER.md](DOCKER.md)** | Docker deployment, Kubernetes, cloud platforms |
+| **[DEPLOYMENT.md](DEPLOYMENT.md)** | Quick deployment (Render, Railway, Fly.io) |
+| **[PYTHON_EXECUTION.md](PYTHON_EXECUTION.md)** | Pyodide usage, examples, troubleshooting |
+| **[DIRECTORY_STRUCTURE.md](DIRECTORY_STRUCTURE.md)** | Complete file structure and dependencies |
+
+### 🚀 Common Commands
+
+```bash
+# Development
+npm run dev              # Run both client + server
+npm run server           # Run backend only
+npm run client           # Run frontend only
+
+# Installation
+npm run install:all      # Install all dependencies
+cd backend && npm install   # Backend only
+cd frontend && npm install  # Frontend only
+
+# Testing
+npm test                 # Run all tests
+npm run test:backend     # Backend tests only
+npm run test:frontend    # Frontend tests only
+
+# Docker
+docker-compose up -d     # Start in Docker
+docker-compose logs -f   # View logs
+docker-compose down      # Stop Docker
+
+# Production Build
+cd frontend && npm run build  # Build React for production
+```
+
+### 🔗 Important URLs (Development)
+
+- **Frontend:** http://localhost:3000
+- **Backend API:** http://localhost:3001
+- **WebSocket:** ws://localhost:3001
+- **Health Check:** http://localhost:3001/health
+
+### 📦 Dependencies Summary
+
+**Backend:**
+- express, ws, uuid, cors
+- Dev: mocha, chai, node-fetch, nodemon
+
+**Frontend:**
+- react, react-dom, react-router-dom, react-syntax-highlighter
+- Dev: @testing-library/react, jest-dom
+
+**Root:**
+- concurrently (runs client + server together)
+
+### 🎯 Tech Stack at a Glance
+
+| Layer | Technology |
+|-------|------------|
+| **Frontend** | React 18 + React Router |
+| **Backend** | Node.js + Express |
+| **Real-time** | WebSocket (ws library) |
+| **Syntax Highlighting** | Prism.js (via react-syntax-highlighter) |
+| **Python Execution** | Pyodide (WebAssembly) |
+| **JavaScript Execution** | Browser's native engine |
+| **Testing** | Mocha + Chai (backend), Jest + RTL (frontend) |
+| **Containerization** | Docker (multi-stage build) |
+| **Deployment** | Render.com / Railway / Fly.io |
 
 ## License
 

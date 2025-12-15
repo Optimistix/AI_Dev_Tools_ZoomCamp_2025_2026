@@ -28,6 +28,8 @@ git push -u origin main
 
 Create this file in your project root:
 
+**Standard Configuration (project at repository root):**
+
 ```yaml
 services:
   - type: web
@@ -35,11 +37,42 @@ services:
     env: docker
     dockerfilePath: ./Dockerfile
     dockerContext: .
+    plan: free
+    healthCheckPath: /health
     envVars:
       - key: NODE_ENV
         value: production
       - key: PORT
-        value: 3001
+        value: 10000
+```
+
+**Subdirectory Configuration (if project is in a subfolder):**
+
+If your project is in a subdirectory like `Homework_2/` or `my-project/`, use this instead:
+
+```yaml
+services:
+  - type: web
+    name: coding-interview-platform
+    env: docker
+    rootDir: YOUR_SUBDIRECTORY_NAME_HERE
+    dockerfilePath: ./Dockerfile
+    dockerContext: ./YOUR_SUBDIRECTORY_NAME_HERE
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+```
+
+**Important:** Replace `YOUR_SUBDIRECTORY_NAME_HERE` with your actual subdirectory path!
+
+Example for `Homework_2_AI_Dev_Tools_ZoomCamp_2025_2026/`:
+```yaml
+rootDir: Homework_2_AI_Dev_Tools_ZoomCamp_2025_2026
+dockerContext: ./Homework_2_AI_Dev_Tools_ZoomCamp_2025_2026
 ```
 
 Commit and push:
@@ -144,6 +177,28 @@ git push
 Render auto-deploys! ✨
 
 ## Troubleshooting
+
+### "Cannot find Dockerfile" Error
+
+**Problem:** Render can't locate your Dockerfile
+
+**Solutions:**
+
+1. **Check your project structure:**
+   - Is your project in a subdirectory? 
+   - Add `rootDir` and update `dockerContext` in `render.yaml` (see configuration above)
+
+2. **Verify file locations:**
+   ```bash
+   # Your Dockerfile should be here:
+   # For root: ./Dockerfile
+   # For subdirectory: ./YOUR_SUBDIRECTORY/Dockerfile
+   ```
+
+3. **Manual configuration:**
+   - In Render dashboard → Settings
+   - Set "Root Directory" to your subdirectory path
+   - Set "Docker Context" to match
 
 ### WebSocket Issues
 

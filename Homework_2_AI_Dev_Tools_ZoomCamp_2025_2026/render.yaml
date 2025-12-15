@@ -2,8 +2,9 @@ services:
   - type: web
     name: coding-interview-platform
     env: docker
+    rootDir: Homework_2_AI_Dev_Tools_ZoomCamp_2025_2026
     dockerfilePath: ./Dockerfile
-    dockerContext: .
+    dockerContext: ./Homework_2_AI_Dev_Tools_ZoomCamp_2025_2026
     plan: free
     healthCheckPath: /health
     envVars:
