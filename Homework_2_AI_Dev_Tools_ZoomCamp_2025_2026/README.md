@@ -141,6 +141,28 @@ See [DOCKER.md](DOCKER.md) for comprehensive Docker deployment documentation.
 - ✅ Health checks included
 - ✅ Production-ready with node:18-alpine base
 
+### Quick Free Deployment (Render.com)
+
+Deploy to the cloud in 5 minutes:
+
+1. **Push to GitHub:**
+```bash
+git init
+git add .
+git commit -m "Initial commit"
+git push -u origin main
+```
+
+2. **Deploy on Render:**
+   - Go to https://render.com
+   - New Web Service → Connect GitHub repo
+   - Render auto-detects Docker config
+   - Click "Create Web Service"
+
+**Live in 5 minutes!** 🚀
+
+See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed deployment guides (Render, Railway, Fly.io, etc.)
+
 ## Testing
 
 The platform includes comprehensive integration tests for both backend and frontend.
